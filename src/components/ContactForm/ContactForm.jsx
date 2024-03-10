@@ -1,28 +1,28 @@
 import css from "./ContactForm.module.css"
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { nanoid } from "nanoid";
-import * as Yup from "yup";
+import { object, string } from "yup";
 import { useId } from "react";
 
 const ContactForm = ({ onAdd }) => {
   const nameId = useId();
   const numberId = useId();
     
-const ContactSchema = Yup.object().shape({
-    userName: Yup.string()
+const ContactSchema = object().shape({
+    name: string()
         .min(3, "User name must be at leest 3 characters!")
         .max(50, "User name must be less than 50 characters!")
         .required("User name is required!"),
-    userNamber: Yup.string()
+    number: string()
         .min(3, "User namber must be at leest 3 characters!")
         .max(50, "User namber must be less than 50 characters!")
         .required("User namber is required!"),
 });
 
-    const handleSubmit = (data, formActions) => {
+    const handleSubmit = (values, formActions) => {
         onAdd({
-      name: data.name,
-      number: data.number,
+      name: values.name,
+      number: values.number,
       id: nanoid(),
     });
         formActions.resetForm();
@@ -33,7 +33,7 @@ const ContactSchema = Yup.object().shape({
           initialValues={{ name: "", number: "" }}
           onSubmit={handleSubmit}>
           
-			<Form className="cssForm">
+			<Form className={css.form}>
               <label className={css.label} htmlFor="{nameId}">
                   <span className={css.labeltext}>Name</span>
                   <Field
@@ -56,7 +56,7 @@ const ContactSchema = Yup.object().shape({
                   />
                   <ErrorMessage className={css.errorMessage} name="number" component="span" />
               </label>
-              <button type="btn">Add contact</button>
+              <button type="btn" className={css.btnAdd}>Add contact</button>
 			</Form>
     </Formik>
   );

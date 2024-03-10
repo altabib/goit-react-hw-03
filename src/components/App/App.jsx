@@ -4,7 +4,6 @@ import ContactList from "../ContactList/ContactList"
 import SearchBox from "../SearchBox/SearchBox"
 import { useState } from "react";
 import { useEffect } from "react";
-import { nanoid } from "nanoid";
 import './App.css'
 
 const contactData = [
@@ -24,11 +23,12 @@ function App() {
     return contactData;
   });
 
+const [filter, setFilter] = useState("");
+
 useEffect(() => {
-    localStorage.setItem("contacts", JSON.stringify(contacts));
+    window.localStorage.setItem("contacts-list", JSON.stringify(contacts));
   }, [contacts]);
   
-const [filter, setFilter] = useState("");
 
   const addContact = (contact) => {
     setContacts((prevContacts) => {
@@ -36,9 +36,6 @@ const [filter, setFilter] = useState("");
     });
   };
   
-  const filterContacts = contacts.filter((item) =>
-    item.name.toLowerCase().includes(filter.toLowerCase())
-  );
   
   const deleteContact = (deleteCont) => { 
     setContacts((prevContacts) => {
@@ -46,12 +43,16 @@ const [filter, setFilter] = useState("");
     });
   };
 
+const filterContacts = contacts.filter((item) =>
+    item.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
-    <div>
-  <h1>Phonebook</h1>
-      <ContactForm addContact={addContact} />
+    <div className="box">
+      <h1>Phonebook</h1>
+      <ContactForm onAdd={addContact} />
       <SearchBox value={filter} setFilter={setFilter} />
-      <ContactList filterContacts={ filterContacts} onDelete={deleteContact}/>
+      <ContactList user={ filterContacts} onDelete={deleteContact}/>
 </div>
   )
 }
